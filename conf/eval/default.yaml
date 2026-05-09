@@ -2,4 +2,4 @@
 eval:
   track: "01"
   window: 5
-  verbose: false
+  verbose: true
