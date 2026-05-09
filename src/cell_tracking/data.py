@@ -13,7 +13,6 @@ from tqdm import tqdm
 from .config import (
     DEFAULT_ARTIFACTS,
     EVALUATION_ZIP_URL,
-    SEGMEASURE_FALLBACK_URL,
     TEST_DATASETS,
     TRAINING_DATASETS,
 )
@@ -62,16 +61,6 @@ def ensure_evaluation_tools(base_dir: Path = DEFAULT_ARTIFACTS) -> Path:
         segmeasure_binary.chmod(0o755)
     return tools_dir
 
-
-def ensure_segmeasure_script(base_dir: Path = DEFAULT_ARTIFACTS) -> Path:
-    """Download the MySEGMeasure helper script."""
-
-    script_path = base_dir / "tools" / "MySEGMeasure.py"
-    if not script_path.exists():
-        _download_file(SEGMEASURE_FALLBACK_URL, script_path)
-    return script_path
-
-
 def ensure_dataset(name: str, split: str = "training", base_dir: Path = DEFAULT_ARTIFACTS) -> Path:
     """Ensure that a dataset split is downloaded and extracted."""
 
@@ -100,7 +89,6 @@ def ensure_all(name: str, splits: Optional[Iterable[str]] = None) -> None:
     """Download evaluation tools plus the requested dataset splits."""
 
     ensure_evaluation_tools()
-    ensure_segmeasure_script()
     splits = splits or ("training", "test")
     for split in splits:
         ensure_dataset(name, split)
