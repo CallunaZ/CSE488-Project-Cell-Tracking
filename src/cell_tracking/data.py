@@ -40,9 +40,24 @@ def _download_file(url: str, destination: Path) -> None:
 
 
 def _extract_zip(source: Path, target: Path) -> None:
+    """Extract a zip file, flattening a single top-level folder if present.
+
+    Some zips (including the Cell Tracking Challenge datasets) wrap everything
+    in a folder with the same name as the zip, producing an extra level of
+    nesting. If the zip contains exactly one top-level directory and nothing
+    else, its contents are moved up so that directory disappears.
+    """
     target.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(source) as archive:
         archive.extractall(target)
+
+    # Check for single top-level folder and flatten if found
+    contents = list(target.iterdir())
+    if len(contents) == 1 and contents[0].is_dir():
+        nested = contents[0]
+        for item in nested.iterdir():
+            shutil.move(str(item), str(target / item.name))
+        nested.rmdir()
 
 
 def ensure_evaluation_tools(base_dir: Path = DEFAULT_ARTIFACTS) -> Path:
