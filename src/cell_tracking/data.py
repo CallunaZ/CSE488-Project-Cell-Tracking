@@ -12,7 +12,6 @@ from tqdm import tqdm
 
 from .config import (
     DEFAULT_ARTIFACTS,
-    EVALUATION_ZIP_URL,
     TEST_DATASETS,
     TRAINING_DATASETS,
 )
@@ -59,23 +58,6 @@ def _extract_zip(source: Path, target: Path) -> None:
             shutil.move(str(item), str(target / item.name))
         nested.rmdir()
 
-
-def ensure_evaluation_tools(base_dir: Path = DEFAULT_ARTIFACTS) -> Path:
-    """Download the Challenge evaluation binaries if missing."""
-
-    tools_dir = base_dir / "tools"
-    segmeasure_binary = tools_dir / "Linux" / "SEGMeasure"
-    if segmeasure_binary.exists():
-        return tools_dir
-
-    zip_path = tools_dir / "EvaluationSoftware.zip"
-    if not zip_path.exists():
-        _download_file(EVALUATION_ZIP_URL, zip_path)
-    _extract_zip(zip_path, tools_dir)
-    if segmeasure_binary.exists():
-        segmeasure_binary.chmod(0o755)
-    return tools_dir
-
 def ensure_dataset(name: str, split: str = "training", base_dir: Path = DEFAULT_ARTIFACTS) -> Path:
     """Ensure that a dataset split is downloaded and extracted."""
 
@@ -103,7 +85,6 @@ def ensure_dataset(name: str, split: str = "training", base_dir: Path = DEFAULT_
 def ensure_all(name: str, splits: Optional[Iterable[str]] = None) -> None:
     """Download evaluation tools plus the requested dataset splits."""
 
-    ensure_evaluation_tools()
     splits = splits or ("training", "test")
     for split in splits:
         ensure_dataset(name, split)

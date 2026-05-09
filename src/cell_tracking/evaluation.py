@@ -6,7 +6,6 @@ import argparse
 import fnmatch
 import os
 import re
-import subprocess
 from pathlib import Path
 from typing import Dict, Tuple
 
@@ -15,7 +14,6 @@ from skimage.io import imread
 from skimage.measure import label, regionprops
 
 from .config import DEFAULT_ARTIFACTS
-from .data import ensure_evaluation_tools
 
 
 ArrayLike = np.ndarray
@@ -91,15 +89,10 @@ class JaccardEvaluator:
 
 
 def run_segmeasure(gt_dir: Path, res_dir: Path, verbose: bool = False) -> None:
-    """Invoke the official SEGMeasure binary on GT vs result folders."""
+    """Evaluate segmentation results using the built-in Jaccard evaluator."""
 
-    base_dir = DEFAULT_ARTIFACTS
-    tools_dir = ensure_evaluation_tools(base_dir)
-    env = dict(PATH=f"{tools_dir}/Linux:" + os.environ.get("PATH", ""))
-    cmd = ["SEGMeasure", str(gt_dir), str(res_dir)]
-    if verbose:
-        cmd.append("-v")
-    subprocess.run(cmd, check=True, env={**os.environ, **env})
+    mean_jac = JaccardEvaluator.evaluate_folder(str(gt_dir), str(res_dir), verbose=verbose)
+    print(f"Mean Jaccard Index: {mean_jac:.3f}")
 
 
 def main():

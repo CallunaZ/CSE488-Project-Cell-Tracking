@@ -10,8 +10,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_ARTIFACTS = Path(os.environ.get("CELL_TRACKING_BASE", PROJECT_ROOT / "artifacts"))
 DEFAULT_ARTIFACTS.mkdir(parents=True, exist_ok=True)
 
-EVALUATION_ZIP_URL = "http://public.celltrackingchallenge.net/software/EvaluationSoftware.zip"
-
 TRAINING_DATASETS: Dict[str, str] = {
     "Fluo-N2DH-GOWT1": "http://data.celltrackingchallenge.net/training-datasets/Fluo-N2DH-GOWT1.zip",
 }
