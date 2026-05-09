@@ -128,8 +128,6 @@ CSE488-Project-Cell-Tracking/
 │   ├── models/
 │   │   └── svm.py          <- SVM train/predict/save/load
 │   └── cli.py              <- optional Typer CLI (same commands as scripts/)
-├── notebooks/
-│   └── 00_reference_colab.ipynb   <- REFERENCE ONLY - do not submit this
 └── tests/
     └── test_features.py    <- tests for the feature extraction module
 ```
